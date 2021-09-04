@@ -1,5 +1,5 @@
 const db = require("../models");
-const { User, Role, RefreshToken } = require("../models");
+const { User, Role, RefreshToken, UserRole } = require("../models");
 const config = require("../config/auth.config");
 
 const Op = db.Sequelize.Op;
@@ -8,34 +8,62 @@ var jwt = require("jsonwebtoken");
 var bcrypt = require("bcryptjs");
 
 exports.signup = (req, res) => {
-  // Save User to Database
-  User.create({
-    username: req.body.username,
-    email: req.body.email,
-    password: bcrypt.hashSync(req.body.password, 8),
-  })
-    .then((user) => {
+  db.sequelize
+    .transaction(async (t) => {
+      const createdUser = await User.create(
+        {
+          username: req.body.username,
+          email: req.body.email,
+          password: bcrypt.hashSync(req.body.password, 8),
+        },
+        {
+          transaction: t,
+        }
+      );
+
       if (req.body.roles) {
-        Role.findAll({
+        const roles = await Role.findAll({
           where: {
             name: {
               [Op.or]: req.body.roles,
             },
           },
-        }).then((roles) => {
-          user.setRoles(roles).then(() => {
-            res.send({ message: "User was registered successfully!" });
+        });
+
+        if (roles.length > 0) {
+          let rolesSelected = [];
+          for (let index = 0; index < roles.length; index++) {
+            rolesSelected.push({
+              roleId: roles[index].id,
+              userId: createdUser.id,
+            });
+          }
+
+          await UserRole.bulkCreate(rolesSelected, {
+            transaction: t,
           });
-        });
-      } else {
-        // user role = 2
-        user.setRoles([2]).then(() => {
-          res.send({ message: "User was registered successfully!" });
-        });
+        } else {
+          const defaultRole = await UserRole.findOne({
+            where: {
+              name: "user",
+            },
+          });
+          await UserRole.create({
+            userId: createdUser.id,
+            roleId: defaultRole.id,
+          });
+        }
       }
+
+      return createdUser;
+    })
+    .then((data) => {
+      res.send(data);
     })
     .catch((err) => {
-      res.status(500).send({ message: err.message });
+      res.status(500).send({
+        message: err.message || "Some error occurred while creating.",
+      });
     });
 };
 

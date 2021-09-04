@@ -2,21 +2,21 @@
   "development": {
     "username": "postgres",
     "password": "secret",
-    "database": "nursing_dev_db",
+    "database": "sidak-dev-db",
     "host": "localhost",
     "dialect": "postgres"
   },
   "test": {
     "username": "postgres",
     "password": "secret",
-    "database": "nursing_test_db",
+    "database": "sidak-test-db",
     "host": "localhost",
     "dialect": "postgres"
   },
   "production": {
     "username": "postgres",
     "password": "secret",
-    "database": "nursing_prod_db",
+    "database": "sidak-prod-db",
     "host": "localhost",
     "dialect": "postgres"
   }
