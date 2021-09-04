@@ -52,45 +52,6 @@ checkAuthorized = (req, res, next) => {
   });
 };
 
-// isModerator = (req, res, next) => {
-//   User.findByPk(req.userId).then((user) => {
-//     user.getRoles().then((roles) => {
-//       for (let i = 0; i < roles.length; i++) {
-//         if (roles[i].name === "moderator") {
-//           next();
-//           return;
-//         }
-//       }
-
-//       res.status(403).send({
-//         message: "Require Moderator Role!",
-//       });
-//     });
-//   });
-// };
-
-// isModeratorOrAdmin = (req, res, next) => {
-//   User.findByPk(req.userId).then((user) => {
-//     user.getRoles().then((roles) => {
-//       for (let i = 0; i < roles.length; i++) {
-//         if (roles[i].name === "moderator") {
-//           next();
-//           return;
-//         }
-
-//         if (roles[i].name === "admin") {
-//           next();
-//           return;
-//         }
-//       }
-
-//       res.status(403).send({
-//         message: "Require Moderator or Admin Role!",
-//       });
-//     });
-//   });
-// };
-
 superRole = (req, res, next) => {
   authorizedRoles.push("super");
   next();
@@ -106,12 +67,42 @@ financeRole = (req, res, next) => {
   next();
   return;
 };
+userRole = (req, res, next) => {
+  authorizedRoles.push("user");
+  next();
+  return;
+};
+nurseRole = (req, res, next) => {
+  authorizedRoles.push("nurse");
+  next();
+  return;
+};
+headOfDepartmentRole = (req, res, next) => {
+  authorizedRoles.push("head of department");
+  next();
+  return;
+};
+headOfSectionRole = (req, res, next) => {
+  authorizedRoles.push("head of section");
+  next();
+  return;
+};
+headOfDivisionRole = (req, res, next) => {
+  authorizedRoles.push("head of division");
+  next();
+  return;
+};
 
 const auth = {
   verifyToken: verifyToken,
   superRole: superRole,
   adminRole: adminRole,
   financeRole: financeRole,
+  userRole: userRole,
+  nurseRole: nurseRole,
+  headOfDepartmentRole: headOfDepartmentRole,
+  headOfSectionRole: headOfSectionRole,
+  headOfDivisionRole: headOfDivisionRole,
   checkAuthorized: checkAuthorized,
 };
 module.exports = auth;
