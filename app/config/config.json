@@ -1,0 +1,23 @@
+{
+  "development": {
+    "username": "postgres",
+    "password": "secret",
+    "database": "nursing_dev_db",
+    "host": "localhost",
+    "dialect": "postgres"
+  },
+  "test": {
+    "username": "postgres",
+    "password": "secret",
+    "database": "nursing_test_db",
+    "host": "localhost",
+    "dialect": "postgres"
+  },
+  "production": {
+    "username": "postgres",
+    "password": "secret",
+    "database": "nursing_prod_db",
+    "host": "localhost",
+    "dialect": "postgres"
+  }
+}
