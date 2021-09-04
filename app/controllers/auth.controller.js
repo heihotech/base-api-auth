@@ -91,7 +91,7 @@ exports.signin = (req, res) => {
       }
 
       const token = jwt.sign({ id: user.id }, config.secret, {
-        expiresIn: config.jwtExpiration,
+        expiresIn: parseInt(config.jwtExpiration),
       });
 
       const refreshToken = await RefreshToken.createToken(user);
@@ -145,7 +145,7 @@ exports.refreshToken = async (req, res) => {
 
     const user = await refreshToken.getUser();
     let newAccessToken = jwt.sign({ id: user.id }, config.secret, {
-      expiresIn: config.jwtExpiration,
+      expiresIn: parseInt(config.jwtExpiration),
     });
 
     return res.status(200).json({
