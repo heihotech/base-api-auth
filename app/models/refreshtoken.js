@@ -41,7 +41,9 @@ module.exports = (sequelize, Sequelize) => {
 
     let _token = uuidv4();
 
-    sequelize
+    let createdToken = "";
+
+    await sequelize
       .transaction(async (t) => {
         const createdRefreshToken = await this.create(
           {
@@ -55,11 +57,13 @@ module.exports = (sequelize, Sequelize) => {
         return createdRefreshToken;
       })
       .then((data) => {
-        return data.token;
+        createdToken = data.token;
       })
       .catch((err) => {
         return err;
       });
+
+    return createdToken;
   };
 
   RefreshToken.verifyExpiration = (token) => {

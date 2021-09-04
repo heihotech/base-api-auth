@@ -94,7 +94,7 @@ exports.signin = (req, res) => {
         expiresIn: config.jwtExpiration,
       });
 
-      let refreshToken = await RefreshToken.createToken(user);
+      const refreshToken = await RefreshToken.createToken(user);
 
       let authorities = [];
       user.getRoles().then((roles) => {
